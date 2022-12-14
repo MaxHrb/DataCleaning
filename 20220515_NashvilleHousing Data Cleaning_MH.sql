@@ -32,14 +32,14 @@ SET SaleDate = CONVERT(Date,SaleDate)
 -- Populate Property Address
 
 
---Q1
+--Nr1
 Select *
 From PortfolioProject.dbo.NashvilleHousing
 --Where PropertyAddress is null
 order by ParcelID
 
 /*--By the following join, "doublers" at ParceID and PropertyAdress are removed or overwritten*/
---Q2
+--Nr2
 select a.ParcelID, a.PropertyAddress, b.ParcelID, b.PropertyAddress
 from NashvilleHousing a
 join NashvilleHousing b
@@ -48,7 +48,7 @@ join NashvilleHousing b
 --where a.PropertyAddress is null 
 
 
---Q3
+--Nr3
 Select 
 a.ParcelID, a.PropertyAddress, b.ParcelID, b.PropertyAddress, 
 ISNULL(a.PropertyAddress,b.PropertyAddress)
@@ -56,11 +56,11 @@ From PortfolioProject.dbo.NashvilleHousing a
 JOIN PortfolioProject.dbo.NashvilleHousing b
 	on a.ParcelID = b.ParcelID
 	AND a.[UniqueID ] <> b.[UniqueID ]
---Where a.PropertyAddress is null --Beachte: Wenn Update aus Q4 scon durchgeführt, kommen im where clause nur leere Tabellen raus
+--Where a.PropertyAddress is null --Remember: If update from Q4 is already done, the where clause tables going to be empty
 
 
 
---Q4
+--Nr4
 --Important: By updating of NashvillHousing use the alias---
 Update a
 SET PropertyAddress = ISNULL(a.PropertyAddress,b.PropertyAddress)
@@ -75,33 +75,33 @@ Where a.PropertyAddress is null
 
 -- Breaking out Address into Individual Columns (Address, City, State)
 --Here it is a matter of separating or removing delimiters (here the comma) (At the beginning always look into the columns whether and if yes which delimiters there are)
---Q1
+--Nr1
 Select PropertyAddress
 From PortfolioProject.dbo.NashvilleHousing
 --Where PropertyAddress is null
 --order by ParcelID
 
---Q2
+--Nr2
 select
 	SUBSTRING(PropertyAddress, 1, ---Starting with at first Komma in the Charindex
 	CHARINDEX(',', PropertyAddress)) as Adress --Charindex (CharacterIndex)
 from NashvilleHousing
 
 ---Charindex sucht die Position heraus
---Q2.1
+--Nr2.1
 select
 	SUBSTRING(PropertyAddress, 1, 
 	CHARINDEX(',', PropertyAddress)) as Adress, 
 CHARINDEX(',', PropertyAddress)--- counts entires (letters) until the komma
 from NashvilleHousing
 
---Q3
+--Nr3
 select
 	SUBSTRING(PropertyAddress, 1, 
 	CHARINDEX(',', PropertyAddress)-1) as Adress 
 from NashvilleHousing
 
---Q4
+--Nr4
 select
 	SUBSTRING(PropertyAddress, 1, 
 	CHARINDEX(',', PropertyAddress)-1) as Adress -- Charindex 
@@ -110,7 +110,7 @@ select
 from NashvilleHousing
 
 
---Q5
+--Nr5
 SELECT
 SUBSTRING(PropertyAddress, 1, 
 	CHARINDEX(',', PropertyAddress) -1 ) as Address,
@@ -121,7 +121,7 @@ SUBSTRING(PropertyAddress,
 From PortfolioProject.dbo.NashvilleHousing
 
 
---Q5.1 ohne Charindex +1 
+--Nr5.1 ohne Charindex +1 
 SELECT
 SUBSTRING(PropertyAddress, 1, 
 	CHARINDEX(',', PropertyAddress) -1 ) as Address,
@@ -154,7 +154,7 @@ Select *
 From PortfolioProject.dbo.NashvilleHousing
 --------------------------------------------------------
 
----Was ähnliches kann man jetzt bei der OwnerAdress machen---
+---Was Ã¤hnliches kann man jetzt bei der OwnerAdress machen---
 Select OwnerAddress
 From PortfolioProject.dbo.NashvilleHousing
 
