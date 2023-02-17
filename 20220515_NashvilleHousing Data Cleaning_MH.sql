@@ -1,7 +1,7 @@
 
 
 /**
-			PortfolioProject Data Exploration & Data Cleaning Nashiville Housing
+			PortfolioProject Data Exploration & Data Cleaning
 			Author: Max Harbauer 15.05.2022
 **/
 
