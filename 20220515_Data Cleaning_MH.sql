@@ -344,4 +344,38 @@ DROP COLUMN OwnerAddress, TaxDistrict, PropertyAddress, SaleDate
 
 
 
+/**ALTERNATIVE ideas for improvement**/
+
+
+
+-- Convert SaleDate column to the DATE data type
+UPDATE NashvilleHousing SET SaleDate = CONVERT(DATE, SaleDate);
+
+-- Populate PropertyAddress column and break it into individual columns
+UPDATE nh
+SET PropertyAddress = TRIM(LEFT(PropertyAddress, CHARINDEX(',', PropertyAddress) - 1)),
+PropertyCity = TRIM(SUBSTRING(PropertyAddress, CHARINDEX(',', PropertyAddress) + 1, CHARINDEX(',', PropertyAddress, CHARINDEX(',', PropertyAddress) + 1) - CHARINDEX(',', PropertyAddress) - 1)),
+PropertyState = TRIM(SUBSTRING(PropertyAddress, CHARINDEX(',', PropertyAddress, CHARINDEX(',', PropertyAddress) + 1) + 1, LEN(PropertyAddress)))
+FROM NashvilleHousing nh;
+
+-- Populate OwnerAddress column and break it into individual columns
+UPDATE nh
+SET OwnerAddress = REPLACE(OwnerAddress, ' ', ' '),
+OwnerSplitAddress = TRIM(PARSENAME(REPLACE(OwnerAddress, ',', '.'), 3)),
+OwnerSplitCity = TRIM(PARSENAME(REPLACE(OwnerAddress, ',', '.'), 2)),
+OwnerSplitState = TRIM(PARSENAME(REPLACE(OwnerAddress, ',', '.'), 1))
+FROM NashvilleHousing nh;
+
+-- Change Y and N to Yes and No in SoldAsVacant column
+UPDATE NashvilleHousing SET SoldAsVacant = CASE SoldAsVacant WHEN 'Y' THEN 'Yes' WHEN 'N' THEN 'No' ELSE SoldAsVacant END;
+
+-- Create an index on the ParcelID column for faster JOINs
+CREATE INDEX IX_NashvilleHousing_ParcelID ON NashvilleHousing(ParcelID);
+
+-- Select statement for testing
+SELECT ParcelID, SaleDate, PropertyAddress, PropertyCity, PropertyState, OwnerAddress, OwnerSplitAddress, OwnerSplitCity, OwnerSplitState, SoldAsVacant
+FROM NashvilleHousing;
+
+
+
 
